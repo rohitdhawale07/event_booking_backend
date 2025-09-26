@@ -11,7 +11,8 @@ const loginParams = {
 const registerParams = {
   mobile: { isRequired: true, isTrim: true, isValidPhone: true },
   email: { isRequired: true, isTrim: true, isValidEmail: true },
-  password: { isRequired: true, isTrim: true }
+  password: { isRequired: true, isTrim: true },
+  name: { isRequired: true, isTrim: true }
 };
 
 router.post('/register', validateRequest(registerParams), authController.register);

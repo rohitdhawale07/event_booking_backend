@@ -5,6 +5,11 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+// Home route
+app.get('/', (req, res) => {
+  res.send('Welcome to Event Booking App!');
+});
+
 // Import routes
 const authRoutes = require('./routes/auth');
 // const eventRoutes = require('./routes/events');

@@ -4,6 +4,10 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+const cors = require('cors');
+
+// Allow all origins
+app.use(cors());
 
 // Home route
 app.get('/', (req, res) => {

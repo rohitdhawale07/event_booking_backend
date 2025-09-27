@@ -10,7 +10,7 @@ const createEventParams = {
   description: { isRequired: true, isTrim: true },
   date: { isRequired: true },
   location: { isRequired: true, isTrim: true },
-    capacity: { isRequired: true } 
+  capacity: { isRequired: true } 
 }
 
 // Only admins can create, edit, delete

@@ -1,3 +1,4 @@
+const Booking = require('../models/Booking');
 const Event = require('../models/Event');
 
 // Add event
@@ -58,15 +59,32 @@ exports.updateEvent = async (req, res) => {
   }
 };
 
-
-// Delete event
+// Delete event only if no bookings exist
 exports.deleteEvent = async (req, res) => {
   try {
-    const event = await Event.findByIdAndDelete(req.params.id);
-    if (!event) return res.status(404).json({ error: 'Event not found' });
-    res.json({ message: 'Event deleted' });
+    const eventId = req.params.id;
+
+    // 1. Check if the event exists
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    // 2. Check if any bookings exist for this event
+    const existingBooking = await Booking.findOne({ event: eventId });
+    if (existingBooking) {
+      return res
+        .status(400)
+        .json({ error: "Cannot delete event. Bookings already exist for this event." });
+    }
+
+    // 3. Delete event if no bookings
+    await Event.findByIdAndDelete(eventId);
+
+    res.json({ message: "Event deleted successfully" });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error("Error deleting event:", err.message);
+    res.status(500).json({ error: "Server error while deleting event" });
   }
 };
 

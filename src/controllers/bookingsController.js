@@ -84,9 +84,17 @@ exports.updateBooking = async (req, res) => {
 exports.getUserBookings = async (req, res) => {
   try {
     const userId = req.user.userId;
-    // Populate event details for each booking
-    const bookings = await Booking.find({ user: userId }).populate('event');
-    res.json(bookings);
+    const user_type = req.user.role;
+
+    let bookings;
+    if(user_type === 'admin'){
+      // Admin can see all bookings
+      bookings = await Booking.find().populate('event').populate('user', 'name email');
+    }else{
+      // Populate event details for each booking
+      bookings = await Booking.find({ user: userId }).populate('event');
+    }
+     return res.json(bookings);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

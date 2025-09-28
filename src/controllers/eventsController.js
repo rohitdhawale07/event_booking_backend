@@ -27,13 +27,37 @@ exports.createEvent = async (req, res) => {
 // Edit event
 exports.updateEvent = async (req, res) => {
   try {
-    const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!event) return res.status(404).json({ error: 'Event not found' });
+    // Find the event first
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ error: "Event not found" });
+
+    // If capacity is being updated, adjust remainingSeats accordingly
+    if (req.body.capacity !== undefined) {
+      const newCapacity = req.body.capacity;
+      const diff = newCapacity - event.capacity;
+
+      // Increase/decrease remainingSeats only if capacity increased/decreased
+      event.remainingSeats = event.remainingSeats + diff;
+
+      // Prevent remainingSeats from going below 0
+      if (event.remainingSeats < 0) event.remainingSeats = 0;
+
+      event.capacity = newCapacity;
+    }
+
+    // Update other fields from req.body
+    if (req.body.title !== undefined) event.title = req.body.title;
+    if (req.body.description !== undefined) event.description = req.body.description;
+    if (req.body.date !== undefined) event.date = req.body.date;
+    if (req.body.location !== undefined) event.location = req.body.location;
+
+    await event.save();
     res.json(event);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
+
 
 // Delete event
 exports.deleteEvent = async (req, res) => {

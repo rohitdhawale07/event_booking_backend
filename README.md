@@ -38,8 +38,8 @@ backend/
 
 ### Clone the repo
 ```bash
-git clone https://github.com/rohitdhawale07/event_booking_frontend.git
-cd event_bookin_frontend
+git clone https://github.com/rohitdhawale07/event_booking_backend.git
+cd event_bookin_backend
 ```
 
 ### Install dependencies
@@ -95,3 +95,4 @@ npm run preview
 ### 📦 Deployment
 - Use Vercel / Netlify / Railway for hosting.
 - Use MongoDB Atlas for production database.
+
